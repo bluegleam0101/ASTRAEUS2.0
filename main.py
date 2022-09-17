@@ -65,11 +65,17 @@ telescope_motor_api = TelescopeMotorController(az_motor=AzimuthMotor(
                                                         step_pin=19,
                                                         mode_pins=(21, 21, 21),
                                                         motor_type="DRV8825"
-                                                                                    ),
+                                                    ),
                                                     steps_360=200,
                                                     gear_ratio=3,
                                                                 ),
-                                               alt_motor=AltitudeMotor())
+
+                                               alt_motor=AltitudeMotor(
+                                                   rpimotor_object=RpiMotorLib.BYJMotor(),
+                                                   steps_360=4096,
+                                                   gear_ratio=3,
+                                               )
+)
 
 
 telescope_pointer = TelescopePointer(telescope_motor_api=telescope_motor_api)
