@@ -10,7 +10,7 @@ EN_pin = 24
 
 
 class AltitudeMotor:
-    def __init__(self, rpimotor_function, gpiopins, steps_360, inv=False, wait=0.003, gear_ratio=1,
+    def __init__(self, rpimotor_object, gpiopins, steps_360, inv=False, wait=0.003, gear_ratio=1,
                  steptype="full"):
         '''
         please provide gear ratio as a float corresponding to
@@ -19,9 +19,9 @@ class AltitudeMotor:
 
         the steps_360 parameter asks for the amount of steps your stepper motor has to turn to turn 360° in full step mode
         '''
-        self.name = rpimotor_function.name
+
         self.current_position = 0.0
-        self.rpimotor_function = rpimotor_function
+        self.rpimotor_object = rpimotor_object
         self.ccwise = False
         self.degrees_to_turn: float
         self.steps: int
@@ -42,7 +42,7 @@ class AzimuthMotor:
 
         the steps_360 parameter asks for the amount of steps your stepper motor has to turn to turn 360° in full step mode
         '''
-        self.name = rpimotor_object.name
+
         self.current_position = 0.0
         self.rpimotor_object = rpimotor_object
         self.clockwise = False
@@ -67,7 +67,7 @@ class TelescopeMotorController():
         self.az_motor = az_motor
         self.alt_motor = alt_motor
 
-        # self.rpimotor_function()
+        # self.rpimotor_object()
 
 ###########################s
 # Actual motor control
