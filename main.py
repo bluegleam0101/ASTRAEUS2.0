@@ -54,7 +54,7 @@ class TelescopePointer:
         #converting astropy angle to float
         az = az.dms[0] + (az.dms[2]/az.dms[1])
         alt = alt.dms[0] + (alt.dms[2] / alt.dms[1])
-
+        print(f"converted to float: alt:{alt} az:{az}")
         if not continuous:
             telescope_motor_api.az_motor.align_azimuth(target_az=az)
             telescope_motor_api.alt_motor.align_altitude(target_alt=alt)
@@ -63,7 +63,6 @@ class TelescopePointer:
         if continuous:
             print("continuously aligning...\nssss")
             while True:
-                telescope_motor_api()
                 print('aligned')
                 time.sleep(continuous_interval)
 
