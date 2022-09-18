@@ -81,7 +81,7 @@ class AzimuthMotor:
             self.clockwise = not self.clockwise
 
         self.rpimotor_object.motor_go(clockwise=self.clockwise, steptype="Full", steps=self.steps, stepdelay=.005,
-                                      initdelay=0.1, wait=self.wait)
+                                      initdelay=0.1)
 
 
 class TelescopeMotorController:
