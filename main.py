@@ -1,5 +1,4 @@
 import time
-import csv
 from datetime import datetime
 import astropy.units as units
 from astropy.time import Time
