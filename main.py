@@ -73,7 +73,7 @@ class TelescopePointer:
 
 
 # initializing objects #
-
+pins_azmotor = [5, 6, 13, 11]
 
 telescope_motor_api = TelescopeMotorController(az_motor=AzimuthMotor(
     rpimotor_object=RpiMotorLib.A4988Nema(
@@ -95,7 +95,7 @@ telescope_motor_api = TelescopeMotorController(az_motor=AzimuthMotor(
         gear_ratio=3,
         inv=True,
         rpimotorlib_oddity=True,
-        gpiopins=([5, 6, 13, 11])
+        gpiopins=pins_azmotor
     )
 )
 
