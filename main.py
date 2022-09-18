@@ -50,6 +50,7 @@ class TelescopePointer:
         """
         if not continuous:
             telescope_motor_api.az_motor.align_azimuth(target_az=az)
+            telescope_motor_api.alt_motor.align_altitude(target_alt=alt)
             print("aligning was successful")
 
         if continuous:

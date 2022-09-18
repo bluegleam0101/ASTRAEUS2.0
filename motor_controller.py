@@ -23,7 +23,7 @@ class AltitudeMotor:
 
     def align_altitude(self, target_alt):
         # finding delta degrees
-        a = target_alt - self.current_position
+        a = float(target_alt) - self.current_position
         a = (a + 180) % 360 - 180
         self.degrees_to_turn = a
 
@@ -67,7 +67,7 @@ class AzimuthMotor:
 
     def align_azimuth(self, target_az):
         # finding delta degrees
-        a = target_az - self.current_position
+        a = float(target_az) - self.current_position
         a = (a + 180) % 360 - 180
         self.degrees_to_turn = abs(a)
         self.steps = abs(int(((a / 360) * self.steps_360) * self.gear_ratio))
