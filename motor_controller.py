@@ -43,6 +43,7 @@ class AltitudeMotor:
                                        ccwise=self.clockwise,
                                        verbose=False, steptype="half", initdelay=.001
                                        )
+        self.current_position = target_alt
 
 
 class AzimuthMotor:
@@ -82,6 +83,7 @@ class AzimuthMotor:
 
         self.rpimotor_object.motor_go(clockwise=self.clockwise, steptype="Full", steps=self.steps, stepdelay=.005,
                                       initdelay=0.1)
+        self.current_position = target_az
 
 
 class TelescopeMotorController:

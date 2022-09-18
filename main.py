@@ -15,11 +15,17 @@ class TelescopePointer:
     def __init__(self, telescope_motor_api):
         self.target = None
         self.time = Time(datetime.now())
+        self.query = ""
+        self.latlng = {}
+
+    def calibrate(self, calibration_reference):
+        pass
 
     def set_target(self, query, latlng):
         """gets current ra, dec, distance, altitude and azimuth for a celestial object specified by the 'celestial_body' parameter,
          sets target. target astrometrics (ra, dec) given in floating point numbers which are degrees"""
-
+        self.query = query
+        self.latlng = latlng
         geo_location = EarthLocation(lat=latlng[0] * units.deg, lon=latlng[0] * units.deg, height=5 * units.m)
         try:
             self.target = SkyCoord.from_name(query)
@@ -51,10 +57,15 @@ class TelescopePointer:
         Set continuous to True if you want to keep aligning at an interval of 10 seconds. (10 is default but can be
         changed using the continuous_interval parameter)
         """
-        #converting astropy angle to float
-        az = az.dms[0] + (az.dms[2]/az.dms[1])
+        # getting az/alt again because time exists
+
+
+        # converting astropy angle to float
+        az = az.dms[0] + (az.dms[2] / az.dms[1])
         alt = alt.dms[0] + (alt.dms[2] / alt.dms[1])
+
         print(f"converted to float: alt:{alt} az:{az}")
+
         if alt < 0:
             return print("WARNING: target under horizon, aborting...")
         if not continuous:
@@ -129,11 +140,14 @@ if __name__ == "__main__":
 
         elif choice == 'A':
             continuous = bool(int(input("continuous? 1 for yes, 0 for no: ")))
+            #temp fix
+            telescope_pointer.time = Time(datetime.now())
+            telescope_pointer.set_target(query=telescope_pointer.query, latlng=telescope_pointer.latlng)
+            ##
             telescope_pointer.align(
                 alt=telescope_pointer.target.alt,
                 az=telescope_pointer.target.az,
                 continuous=continuous,
                 telescope_motor_api=telescope_motor_api
             )
-
-    # pointer.align(dgbsdhfb
+            print("aligned")
