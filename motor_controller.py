@@ -1,5 +1,3 @@
-from RpiMotorLib import RpiMotorLib
-
 
 class AltitudeMotor:
     def __init__(self, rpimotor_object, steps_360, gpiopins=None, inv=False, wait=0.003, gear_ratio=1, steptype="full", rpimotorlib_oddity=False):
@@ -20,6 +18,7 @@ class AltitudeMotor:
         self.degrees_to_turn = 0
         self.steps = 0
         self.inv = inv
+        self.wait = wait
 
     def align_altitude(self, target_alt):
         # finding delta degrees
@@ -37,9 +36,9 @@ class AltitudeMotor:
         if self.oddity:
             self.clockwise = not self.clockwise
 
-        self.rpimotor_object.motor_run(self,
+        self.rpimotor_object.motor_run(
                                        gpiopins=self.gpiopins,
-                                       wait=.001,
+                                       wait=self.wait,
                                        steps=self.steps,
                                        ccwise=self.clockwise,
                                        verbose=False, steptype="half", initdelay=.001
@@ -64,6 +63,7 @@ class AzimuthMotor:
         self.clockwise = False
         self.degrees_to_turn = None
         self.steps = None
+        self.wait = wait
 
     def align_azimuth(self, target_az):
         # finding delta degrees
@@ -81,32 +81,12 @@ class AzimuthMotor:
             self.clockwise = not self.clockwise
 
         self.rpimotor_object.motor_go(clockwise=self.clockwise, steptype="Full", steps=self.steps, stepdelay=.005,
-                                      initdelay=0.1)
+                                      initdelay=0.1, wait=self.wait)
 
 
-class TelescopeMotorController():
+class TelescopeMotorController:
     def __init__(self, alt_motor, az_motor):
         self.az_motor = az_motor
         self.alt_motor = alt_motor
 
-        # self.rpimotor_object()
 
-###########################s
-# Actual motor control
-
-# GPIO.setmode(GPIO.BOARD)
-# GPIO.setup(EN_pin, GPIO.OUT)
-# x = 0
-# for i in range(0,2):
-#    GPIO.output(EN_pin, GPIO.LOW)  #s pull enable to low to enable motor
-#   mymotortest.motor_go(False,  # True=Clockwise, False=Counter-Clockwise
-#                          "Full",  # Step type (Full,Half,1/4,1/8,1/16,1/32)
-#                         200,  # number of steps
-#                        .0005,  # step delay [sec]
-#                       False,  # True = print verbose output
-#                      .05)  # initial delay [sec]
-# time.sleep(5)
-
-
-# GPIO.cleanup()  # clear GPIO allocations after run
-# skskksksksk
