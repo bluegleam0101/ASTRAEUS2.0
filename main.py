@@ -18,8 +18,8 @@ class TelescopePointer:
         self.query = ""
         self.latlng = {}
 
-    def calibrate(self, calibration_reference):
-        self.set_target(query=calibration_reference, latlng=self.latlng)
+    def calibrate(self, calibration_reference, latlng):
+        self.set_target(query=calibration_reference, latlng=latlng)
         az = telescope_pointer.target.az
         alt = telescope_pointer.target.alt
         az = az.dms[0] + (az.dms[2] / az.dms[1])
@@ -158,7 +158,7 @@ if __name__ == "__main__":
             print("aligned")
 
         elif choice == 'C':
-            telescope_pointer.calibrate(calibration_reference=input("\n calibration reference: "))
+            telescope_pointer.calibrate(calibration_reference=input("\n calibration reference: "),latlng=latlng)
             print("calibrated")
 
         elif choice == 'exit':
