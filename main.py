@@ -55,6 +55,8 @@ class TelescopePointer:
         az = az.dms[0] + (az.dms[2]/az.dms[1])
         alt = alt.dms[0] + (alt.dms[2] / alt.dms[1])
         print(f"converted to float: alt:{alt} az:{az}")
+        if alt < 0:
+            return print("WARNING: target under horizon, aborting...")
         if not continuous:
             telescope_motor_api.az_motor.align_azimuth(target_az=az)
             telescope_motor_api.alt_motor.align_altitude(target_alt=alt)
@@ -91,9 +93,9 @@ telescope_motor_api = TelescopeMotorController(az_motor=AzimuthMotor(
         rpimotor_object=RpiMotorLib.BYJMotor(),
         steps_360=4096,
         gear_ratio=3,
-        gpiopins=[5, 6, 13, 11],
         inv=True,
-        rpimotorlib_oddity=True
+        rpimotorlib_oddity=True,
+        gpiopins=([5, 6, 13, 11])
     )
 )
 
@@ -126,7 +128,7 @@ if __name__ == "__main__":
                 break
 
         elif choice == 'A':
-            continuous = bool(int(input("Continuous align? 1 for yes, 0 for no: ")))
+            continuous = bool(int(input("continuous? 1 for yes, 0 for no: ")))
             telescope_pointer.align(
                 alt=telescope_pointer.target.alt,
                 az=telescope_pointer.target.az,
