@@ -33,7 +33,9 @@ class TelescopePointer:
             # f"right inclination axis: {self.target.transform_to(BaseRADecFrame()).ra} degrees\n"
             # f"declination axis: {self.target.transform_to(BaseRADecFrame()).dec} degrees\n"
             # f"distance: {self.target['dis']}\n"
-            f"local altitude: {type(self.target.alt)}\n"
+            f"local altitude: {self.target.alt}\n"
+            f"local azimuth: {self.target.az}\n"
+            f"local altitude: {self.target.alt.dms}\n"
             f"local azimuth: {self.target.az.dms}\n"
         )
 
