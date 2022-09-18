@@ -4,24 +4,30 @@ from datetime import datetime
 import astropy.units as units
 from astropy.time import Time
 import geocoder
-from astropy.coordinates import SkyCoord, EarthLocation, AltAz, BaseRADecFrame
+from astropy.coordinates import SkyCoord, EarthLocation, AltAz, get_body
+from astropy.coordinates.name_resolve import NameResolveError
+from astropy.coordinates import solar_system_ephemeris
 from motor_controller import TelescopeMotorController, AltitudeMotor, AzimuthMotor
 from RpiMotorLib import RpiMotorLib
 
 
 class TelescopePointer:
     def __init__(self, telescope_motor_api):
-        self.target: object
+        self.target = None
+        self.time = Time(datetime.now())
 
     def set_target(self, query, latlng):
         """gets current ra, dec, distance, altitude and azimuth for a celestial object specified by the 'celestial_body' parameter,
          sets target. target astrometrics (ra, dec) given in floating point numbers which are degrees"""
 
-        time = Time(datetime.now())
         geo_location = EarthLocation(lat=latlng[0] * units.deg, lon=latlng[0] * units.deg, height=5 * units.m)
+        try:
+            self.target = SkyCoord.from_name(query)
+            self.target = self.target.transform_to(AltAz(obstime=self.time, location=geo_location))
+        except NameResolveError:
+            self.target = get_body(body=query, time=self.time, location=geo_location)
+            self.target = self.target.transform_to(AltAz(obstime=self.time, location=geo_location))
 
-        self.target = SkyCoord.from_name(query)
-        self.target = self.target.transform_to(AltAz(obstime=time, location=geo_location))
         print(self.target.az, self.target.alt, self.target.info)
         print(
             # f"right inclination axis: {self.target.transform_to(BaseRADecFrame()).ra} degrees\n"
@@ -72,7 +78,7 @@ telescope_motor_api = TelescopeMotorController(az_motor=AzimuthMotor(
     gear_ratio=3,
     inv=True
 
-    ),
+),
 
     alt_motor=AltitudeMotor(
         rpimotor_object=RpiMotorLib.BYJMotor(),
@@ -88,7 +94,10 @@ telescope_pointer = TelescopePointer(telescope_motor_api=telescope_motor_api)
 
 if __name__ == "__main__":
     while True:
+
+        solar_system_ephemeris.set('jpl')
         latlng = geocoder.ip('me').latlng
+
         print(f"Current coordinates: lat: {latlng[0]}, long: {latlng[1]}.")
         if latlng is None:
             print("Could not get current coordinates.")
