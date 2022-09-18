@@ -33,8 +33,8 @@ class TelescopePointer:
             # f"right inclination axis: {self.target.transform_to(BaseRADecFrame()).ra} degrees\n"
             # f"declination axis: {self.target.transform_to(BaseRADecFrame()).dec} degrees\n"
             # f"distance: {self.target['dis']}\n"
-            f"local altitude: {self.target.alt}\n"
-            f"local azimuth: {self.target.az}\n"
+            f"local altitude: {type(self.target.alt)}\n"
+            f"local azimuth: {type(self.target.az.dms)}\n"
         )
 
     # align func is a function you have to pass that takes a ra- and dec axis and points the telescopes
