@@ -96,7 +96,7 @@ if __name__ == "__main__":
         if choice == 'S':
             for i in range(1, 100):
                 try:
-                    telescope_motor_api.set_target(query=input("Please enter celestial object to set as target: "), latlng=latlng)
+                    telescope_pointer.set_target(query=input("Please enter celestial object to set as target: "), latlng=latlng)
                     print("target set, ready to align")
                 except ValueError:
                     print("Celestial object not found, please try again.")

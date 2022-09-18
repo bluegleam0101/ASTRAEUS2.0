@@ -26,10 +26,6 @@ class AltitudeMotor:
         self.degrees_to_turn = 0
         self.steps = 0
 
-        # self.altitude_motor = RpiMotorLib.BYJMotor()
-        # self.altitude_motor.motor_run(gpiopins=alt_pins, wait=.003, steps=1536, ccwise=False,
-        # verbose=False, steptype="full", initdelay=.001)
-
     def align_altitude(self, target_alt):
         # finding delta degrees
         a = target_alt - self.current_position
@@ -39,7 +35,7 @@ class AltitudeMotor:
         self.steps = int(((a / 360) * self.steps_360) * self.gear_ratio)
         print(self.degrees_to_turn)
 
-        self.rpimotor_object.motor_run(self, gpiopins=self.gpiopins, wait=.001, steps=512, ccwise=False,
+        self.rpimotor_object.motor_run(self, gpiopins=self.gpiopins, wait=.001, steps=self.steps, ccwise=False,
                       verbose=False, steptype="half", initdelay=.001)
 
 
@@ -57,8 +53,8 @@ class AzimuthMotor:
         self.current_position = 0.0
         self.rpimotor_object = rpimotor_object
         self.clockwise = False
-        self.degrees_to_turn: float
-        self.steps: int
+        self.degrees_to_turn = None
+        self.steps = None
 
     def align_azimuth(self, target_az):
         # finding delta degrees
