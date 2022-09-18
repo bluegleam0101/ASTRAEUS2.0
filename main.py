@@ -24,6 +24,7 @@ class TelescopePointer:
         try:
             self.target = SkyCoord.from_name(query)
             self.target = self.target.transform_to(AltAz(obstime=self.time, location=geo_location))
+
         except NameResolveError:
             self.target = get_body(body=query, time=self.time, location=geo_location)
             self.target = self.target.transform_to(AltAz(obstime=self.time, location=geo_location))
@@ -50,6 +51,10 @@ class TelescopePointer:
         Set continuous to True if you want to keep aligning at an interval of 10 seconds. (10 is default but can be
         changed using the continuous_interval parameter)
         """
+        #converting astropy angle to float
+        az = az.dms[0] + (az.dms[2]/az.dms[1])
+        alt = alt.dms[0] + (alt.dms[2] / alt.dms[1])
+
         if not continuous:
             telescope_motor_api.az_motor.align_azimuth(target_az=az)
             telescope_motor_api.alt_motor.align_altitude(target_alt=alt)
