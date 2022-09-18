@@ -1,15 +1,8 @@
-import time
 from RpiMotorLib import RpiMotorLib
 
 
-alt_pins = (17, 18, 27, 22)
-direction = 16
-step = 23
-EN_pin = 24
-
-
 class AltitudeMotor:
-    def __init__(self, rpimotor_object, steps_360, gpiopins=None, inv=False, wait=0.003, gear_ratio=1, steptype="full"):
+    def __init__(self, rpimotor_object, steps_360, gpiopins=None, inv=False, wait=0.003, gear_ratio=1, steptype="full", rpimotorlib_oddity=False):
         """
         please provide gear ratio as a float corresponding to
         the amount of times to motor has to turn 360° to fully
@@ -17,6 +10,7 @@ class AltitudeMotor:
 
         the steps_360 parameter asks for the amount of steps your stepper motor has to turn to turn 360° in full step mode
         """
+        self.oddity = rpimotorlib_oddity
         self.gpiopins = gpiopins
         self.steps_360 = steps_360
         self.gear_ratio = gear_ratio
@@ -25,6 +19,7 @@ class AltitudeMotor:
         self.clockwise = False
         self.degrees_to_turn = 0
         self.steps = 0
+        self.inv = inv
 
     def align_altitude(self, target_alt):
         # finding delta degrees
@@ -34,13 +29,25 @@ class AltitudeMotor:
 
         self.steps = int(((a / 360) * self.steps_360) * self.gear_ratio)
         print(self.degrees_to_turn)
+        #determining direction
+        if self.degrees_to_turn < 0:
+            self.clockwise = False
+        if self.inv:
+            self.clockwise = not self.clockwise
+        if self.oddity:
+            self.clockwise = not self.clockwise
 
-        self.rpimotor_object.motor_run(self, gpiopins=self.gpiopins, wait=.001, steps=self.steps, ccwise=False,
-                      verbose=False, steptype="half", initdelay=.001)
+        self.rpimotor_object.motor_run(self,
+                                       gpiopins=self.gpiopins,
+                                       wait=.001,
+                                       steps=self.steps,
+                                       ccwise=self.clockwise,
+                                       verbose=False, steptype="half", initdelay=.001
+                                       )
 
 
 class AzimuthMotor:
-    def __init__(self, rpimotor_object, steps_360, gpio_pins=None, inv=False, wait=0.003, gear_ratio=1, steptype="full"):
+    def __init__(self, rpimotor_object, steps_360, gpio_pins=None, inv=False, wait=0.003, gear_ratio=1, steptype="full", rpimotorlib_discrepancy=False):
         """
         please provide gear ratio as a float corresponding to
         the amount of times to motor has to turn 360° to fully
@@ -48,6 +55,8 @@ class AzimuthMotor:
 
         the steps_360 parameter asks for the amount of steps your stepper motor has to turn to turn 360° in full step mode
         """
+        self.oddity = rpimotorlib_discrepancy
+        self.inv = inv
         self.steps_360 = steps_360
         self.gear_ratio = gear_ratio
         self.current_position = 0.0
@@ -60,9 +69,16 @@ class AzimuthMotor:
         # finding delta degrees
         a = target_az - self.current_position
         a = (a + 180) % 360 - 180
-        self.degrees_to_turn = a
-        self.steps = int(((a / 360) * self.steps_360) * self.gear_ratio)
+        self.degrees_to_turn = abs(a)
+        self.steps = abs(int(((a / 360) * self.steps_360) * self.gear_ratio))
         print(self.degrees_to_turn)
+        # determining direction
+        if self.degrees_to_turn < 0:
+            self.clockwise = False
+        if self.inv:
+            self.clockwise = not self.clockwise
+        if self.oddity:
+            self.clockwise = not self.clockwise
 
         self.rpimotor_object.motor_go(clockwise=self.clockwise, steptype="Full", steps=self.steps, stepdelay=.005,
                                       initdelay=0.1)

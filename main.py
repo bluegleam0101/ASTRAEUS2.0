@@ -18,15 +18,15 @@ class TelescopePointer:
          sets target. target astrometrics (ra, dec) given in floating point numbers which are degrees"""
 
         time = Time(datetime.now())
-        geo_location = EarthLocation(lat=latlng[0]*units.deg, lon=latlng[0]*units.deg, height=5*units.m)
+        geo_location = EarthLocation(lat=latlng[0] * units.deg, lon=latlng[0] * units.deg, height=5 * units.m)
 
         self.target = SkyCoord.from_name(query)
-        self.target = self.target.transform_to(AltAz(obstime=time,location=geo_location))
+        self.target = self.target.transform_to(AltAz(obstime=time, location=geo_location))
         print(self.target.az, self.target.alt, self.target.info)
         print(
-            #f"right inclination axis: {self.target.transform_to(BaseRADecFrame()).ra} degrees\n"
-            #f"declination axis: {self.target.transform_to(BaseRADecFrame()).dec} degrees\n"
-            #f"distance: {self.target['dis']}\n"
+            # f"right inclination axis: {self.target.transform_to(BaseRADecFrame()).ra} degrees\n"
+            # f"declination axis: {self.target.transform_to(BaseRADecFrame()).dec} degrees\n"
+            # f"distance: {self.target['dis']}\n"
             f"local altitude: {self.target.alt}\n"
             f"local azimuth: {self.target.az}\n"
         )
@@ -56,30 +56,35 @@ class TelescopePointer:
     def display_text(self, text):
         pass
 
+
 # initializing objects #
 
 
 telescope_motor_api = TelescopeMotorController(az_motor=AzimuthMotor(
-                                                    rpimotor_object=RpiMotorLib.A4988Nema(
-                                                        direction_pin=26,
-                                                        step_pin=19,
-                                                        mode_pins=(21, 21, 21),
-                                                        motor_type="DRV8825"
-                                                    ),
-                                                    steps_360=200,
-                                                    gear_ratio=3,
-                                                                ),
+    rpimotor_object=RpiMotorLib.A4988Nema(
+        direction_pin=26,
+        step_pin=19,
+        mode_pins=(21, 21, 21),
+        motor_type="DRV8825"
+    ),
 
-                                               alt_motor=AltitudeMotor(
-                                                   rpimotor_object=RpiMotorLib.BYJMotor(),
-                                                   steps_360=4096,
-                                                   gear_ratio=3,
-                                               )
+    steps_360=200,
+    gear_ratio=3,
+    inv=True
+
+    ),
+
+    alt_motor=AltitudeMotor(
+        rpimotor_object=RpiMotorLib.BYJMotor(),
+        steps_360=4096,
+        gear_ratio=3,
+        gpiopins=[5, 6, 13, 11],
+        inv=True,
+        rpimotorlib_oddity=True
+    )
 )
 
-
 telescope_pointer = TelescopePointer(telescope_motor_api=telescope_motor_api)
-
 
 if __name__ == "__main__":
     while True:
@@ -96,8 +101,9 @@ if __name__ == "__main__":
         if choice == 'S':
             for i in range(1, 100):
                 try:
-                    telescope_pointer.set_target(query=input("Please enter celestial object to set as target: "), latlng=latlng)
-                    print("target set, ready to align")
+                    telescope_pointer.set_target(query=input("Please enter celestial object to set as target: "),
+                                                 latlng=latlng)
+                    print("target set, ready to align.")
                 except ValueError:
                     print("Celestial object not found, please try again.")
                     continue
@@ -113,6 +119,3 @@ if __name__ == "__main__":
             )
 
     # pointer.align(dgbsdhfb
-
-
-
