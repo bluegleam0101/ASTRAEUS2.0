@@ -19,7 +19,13 @@ class TelescopePointer:
         self.latlng = {}
 
     def calibrate(self, calibration_reference):
-        pass
+        self.set_target(query=calibration_reference, latlng=self.latlng)
+        az = telescope_pointer.target.az
+        alt = telescope_pointer.target.alt
+        az = az.dms[0] + (az.dms[2] / az.dms[1])
+        alt = alt.dms[0] + (alt.dms[2] / alt.dms[1])
+        telescope_motor_api.az_motor.current_position = az
+        telescope_motor_api.alt_motor.current_position = alt
 
     def set_target(self, query, latlng):
         """gets current ra, dec, distance, altitude and azimuth for a celestial object specified by the 'celestial_body' parameter,
@@ -58,7 +64,6 @@ class TelescopePointer:
         changed using the continuous_interval parameter)
         """
         # getting az/alt again because time exists
-
 
         # converting astropy angle to float
         az = az.dms[0] + (az.dms[2] / az.dms[1])
@@ -125,7 +130,7 @@ if __name__ == "__main__":
             current_lat = str.title(input("please specify your latitude: "))
             latlng = [current_lat, current_long]
 
-        choice = input("would you like to set a new target or align telescope? (S/A): ")
+        choice = input("would you like to set a new target or align or calibrate telescope? (S/A/C): ")
 
         if choice == 'S':
             for i in range(1, 100):
@@ -140,7 +145,7 @@ if __name__ == "__main__":
 
         elif choice == 'A':
             continuous = bool(int(input("continuous? 1 for yes, 0 for no: ")))
-            #temp fix
+            # temp fix
             telescope_pointer.time = Time(datetime.now())
             telescope_pointer.set_target(query=telescope_pointer.query, latlng=telescope_pointer.latlng)
             ##
@@ -151,3 +156,10 @@ if __name__ == "__main__":
                 telescope_motor_api=telescope_motor_api
             )
             print("aligned")
+
+        elif choice == 'C':
+            telescope_pointer.calibrate(calibration_reference=input("\n calibration reference: "))
+            print("calibrated")
+
+        elif choice == 'exit':
+            break
