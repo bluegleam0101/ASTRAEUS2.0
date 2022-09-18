@@ -24,8 +24,8 @@ class TelescopePointer:
         self.target = self.target.transform_to(AltAz(obstime=time,location=geo_location))
         print(self.target.az, self.target.alt, self.target.info)
         print(
-            f"right inclination axis: {self.target.transform_to(BaseRADecFrame()).ra} degrees\n"
-            f"declination axis: {self.target.transform_to(BaseRADecFrame()).dec} degrees\n"
+            #f"right inclination axis: {self.target.transform_to(BaseRADecFrame()).ra} degrees\n"
+            #f"declination axis: {self.target.transform_to(BaseRADecFrame()).dec} degrees\n"
             #f"distance: {self.target['dis']}\n"
             f"local altitude: {self.target.alt}\n"
             f"local azimuth: {self.target.az}\n"
