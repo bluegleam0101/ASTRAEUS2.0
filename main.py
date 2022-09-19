@@ -122,13 +122,13 @@ if __name__ == "__main__":
         solar_system_ephemeris.set('jpl')
         latlng = geocoder.ip('me').latlng
 
-        print(f"Current coordinates: lat: {latlng[0]}, long: {latlng[1]}.")
         if latlng is None:
             print("Could not get current coordinates.")
             current_long = str.title(input("please specify your longitude: "))
             current_lat = str.title(input("please specify your latitude: "))
             latlng = [current_lat, current_long]
 
+        print(f"Current coordinates: lat: {latlng[0]}, long: {latlng[1]}.")
         choice = input("would you like to set a new target or align or calibrate telescope? (S/A/C): ")
 
         if choice == 'S':
@@ -157,7 +157,7 @@ if __name__ == "__main__":
             print("aligned")
 
         elif choice == 'C':
-            telescope_pointer.calibrate(calibration_reference=input("\n calibration reference: "),latlng=latlng)
+            telescope_pointer.calibrate(calibration_reference=input("\n calibration reference: "), latlng=latlng)
             print("calibrated")
 
         elif choice == 'exit':
