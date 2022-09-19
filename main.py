@@ -1,8 +1,10 @@
 import time
+import requests
 from datetime import datetime
 import astropy.units as units
 from astropy.time import Time
 import geocoder
+import pandas as pd
 from astropy.coordinates import SkyCoord, EarthLocation, AltAz, get_body
 from astropy.coordinates.name_resolve import NameResolveError
 from astropy.coordinates import solar_system_ephemeris
@@ -31,10 +33,20 @@ class TelescopePointer:
          sets target. target astrometrics (ra, dec) given in floating point numbers which are degrees"""
         self.query = query
         self.latlng = latlng
-        geo_location = EarthLocation(lat=latlng[0] * units.deg, lon=latlng[0] * units.deg, height=5 * units.m)
+
+        # script for returning elevation from lat, long, based on open elevation data
+        # which in turn is based on SRTM
+
+        query = (f'https://api.open-elevation.com/api/v1/lookup'
+                 f'?locations={latlng[0]},{latlng[1]}')
+        r = requests.get(query).json()  # json object, various ways you can extract value
+        # one approach is to use pandas json functionality:
+        elevation = float(pd.io.json.json_normalize(r, 'results')['elevation'].values[0])
+
+        geo_location = EarthLocation(lat=latlng[0] * units.deg, lon=latlng[0] * units.deg, height=elevation * units.m)
         try:
             self.target = SkyCoord.from_name(query)
-            self.target = self.target.transform_to(AltAz(obstime=self.time, location=geo_location))
+            self.target = self.target.transform_to(AltAz(obstime=self.time, location=geo_location, ))
 
         except NameResolveError:
             self.target = get_body(body=query, time=self.time, location=geo_location)
