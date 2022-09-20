@@ -15,7 +15,8 @@ from RpiMotorLib import RpiMotorLib
 class TelescopePointer:
     def __init__(self, telescope_motor_api):
         self.target = None
-        self.time = Time(datetime.now())
+        utcoffset = 1 * units.hour  # Eastern Daylight Time
+        self.time = Time(datetime.now()) + utcoffset
         self.query = ""
         self.latlng = {}
 
