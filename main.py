@@ -135,6 +135,9 @@ if __name__ == "__main__":
         latlng = geocoder.ip('me').latlng
 
         if latlng is None:
+            for i in range(0, 5):
+                latlng = geocoder.ip('me').latlng
+        if latlng is None:
             print("Could not get current coordinates.")
             current_long = str.title(input("please specify your longitude: "))
             current_lat = str.title(input("please specify your latitude: "))
