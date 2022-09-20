@@ -28,8 +28,8 @@ class AltitudeMotor:
         self.degrees_to_turn = a
 
         self.steps = abs(int(((self.degrees_to_turn / 360) * self.steps_360) * self.gear_ratio))
-        print(f"degrees to turn:{self.degrees_to_turn}")
-        print(f"steps to turn:{self.steps}")
+        print(f"alt: degrees to turn:{self.degrees_to_turn}")
+        print(f"alt: steps to turn:{self.steps}")
 
         #determining direction
         if self.degrees_to_turn < 0:
@@ -58,6 +58,7 @@ class AzimuthMotor:
 
         the steps_360 parameter asks for the amount of steps your stepper motor has to turn to turn 360° in full step mode
         """
+        self.steptype = steptype
         self.oddity = rpimotorlib_discrepancy
         self.inv = inv
         self.steps_360 = steps_360
@@ -76,6 +77,8 @@ class AzimuthMotor:
         self.degrees_to_turn = abs(a)
         self.steps = abs(int(((a / 360) * self.steps_360) * self.gear_ratio))
         print(self.degrees_to_turn)
+        print(f"az: degrees to turn:{self.degrees_to_turn}")
+        print(f"az: steps to turn:{self.steps}")
         # determining direction
         if self.degrees_to_turn < 0:
             self.clockwise = False
@@ -84,7 +87,7 @@ class AzimuthMotor:
         if self.oddity:
             self.clockwise = not self.clockwise
 
-        self.rpimotor_object.motor_go(clockwise=self.clockwise, steptype="Full", steps=self.steps, stepdelay=.005,
+        self.rpimotor_object.motor_go(clockwise=self.clockwise, steptype=self.steptype, steps=self.steps, stepdelay=.005,
                                       initdelay=0.1)
         self.current_position = target_az
 
