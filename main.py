@@ -115,10 +115,10 @@ telescope_motor_api = TelescopeMotorController(az_motor=AzimuthMotor(
     inv=True
 
 ),
-
+#2038
     alt_motor=AltitudeMotor(
         rpimotor_object=RpiMotorLib.BYJMotor(),
-        steps_360=2038,
+        steps_360=1019,
         gear_ratio=3,
         inv=True,
         rpimotorlib_oddity=True,
