@@ -38,7 +38,7 @@ class TelescopePointer:
         # which in turn is based on SRTM
 
         #query = (f'https://api.open-elevation.com/api/v1/lookup'
-                 f'?locations={latlng[0]},{latlng[1]}')
+        #f'?locations={latlng[0]},{latlng[1]}')
         #r = requests.get(query).json()  # json object, various ways you can extract value
         # one approach is to use pandas json functionality:
         #elevation = float(pd.io.json.json_normalize(r, 'results')['elevation'].values[0])
