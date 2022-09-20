@@ -4,7 +4,7 @@ from datetime import datetime
 import astropy.units as units
 from astropy.time import Time
 import geocoder
-import pandas as pd
+#import pandas as pd
 from astropy.coordinates import SkyCoord, EarthLocation, AltAz, get_body
 from astropy.coordinates.name_resolve import NameResolveError
 from astropy.coordinates import solar_system_ephemeris
