@@ -8,6 +8,7 @@ class AltitudeMotor:
 
         the steps_360 parameter asks for the amount of steps your stepper motor has to turn to turn 360° in full step mode
         """
+        self.steptype = steptype
         self.oddity = rpimotorlib_oddity
         self.gpiopins = gpiopins
         self.steps_360 = steps_360
@@ -26,7 +27,7 @@ class AltitudeMotor:
         a = (a + 180) % 360 - 180
         self.degrees_to_turn = a
 
-        self.steps = int(((a / 360) * self.steps_360) * self.gear_ratio)
+        self.steps = abs(int(((self.degrees_to_turn / 360) * self.steps_360) * self.gear_ratio))
         print(f"degrees to turn:{self.degrees_to_turn}")
         print(f"steps to turn:{self.steps}")
 
@@ -43,7 +44,7 @@ class AltitudeMotor:
                                        wait=self.wait,
                                        steps=self.steps,
                                        ccwise=self.clockwise,
-                                       verbose=False, steptype="full", initdelay=.02
+                                       verbose=False, steptype=self.steptype, initdelay=.02
                                        )
         self.current_position = target_alt
 
