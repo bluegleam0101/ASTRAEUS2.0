@@ -27,7 +27,9 @@ class AltitudeMotor:
         self.degrees_to_turn = a
 
         self.steps = int(((a / 360) * self.steps_360) * self.gear_ratio)
-        print(self.degrees_to_turn)
+        print(f"degrees to turn:{self.degrees_to_turn}")
+        print(f"steps to turn:{self.steps}")
+
         #determining direction
         if self.degrees_to_turn < 0:
             self.clockwise = False
@@ -41,7 +43,7 @@ class AltitudeMotor:
                                        wait=self.wait,
                                        steps=self.steps,
                                        ccwise=self.clockwise,
-                                       verbose=False, steptype="half", initdelay=.001
+                                       verbose=False, steptype="full", initdelay=.02
                                        )
         self.current_position = target_alt
 
