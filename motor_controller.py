@@ -1,10 +1,11 @@
 
 class AltitudeMotor:
-    def __init__(self, rpimotor_object, steps_360, gpiopins=None, inv=False, wait=0.003, gear_ratio=1, steptype="full", rpimotorlib_oddity=False):
+    def __init__(self, rpimotor_object, steps_360, gpiopins=None, inv=False, wait=0.01, gear_ratio=1, steptype="full", rpimotorlib_oddity=False):
         """
         please provide gear ratio as a float corresponding to
         the amount of times to motor has to turn 360° to fully
         rotate to telescope once.
+
 
         the steps_360 parameter asks for the amount of steps your stepper motor has to turn to turn 360° in full step mode
         """
@@ -50,7 +51,7 @@ class AltitudeMotor:
 
 
 class AzimuthMotor:
-    def __init__(self, rpimotor_object, steps_360, gpiopins=None, inv=False, wait=0.003, gear_ratio=1, steptype="full", rpimotorlib_discrepancy=False):
+    def __init__(self, rpimotor_object, steps_360, gpiopins=None, inv=False, wait=0.01, gear_ratio=1, steptype="full", rpimotorlib_discrepancy=False):
         """
         please provide gear ratio as a float corresponding to
         the amount of times to motor has to turn 360° to fully
@@ -87,7 +88,7 @@ class AzimuthMotor:
         if self.oddity:
             self.clockwise = not self.clockwise
 
-        self.rpimotor_object.motor_go(clockwise=self.clockwise, steptype=self.steptype, steps=self.steps, stepdelay=.005,
+        self.rpimotor_object.motor_go(clockwise=self.clockwise, steptype=self.steptype, steps=self.steps, stepdelay=self.wait,
                                       initdelay=0.1)
         self.current_position = target_az
 
