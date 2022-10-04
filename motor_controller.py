@@ -1,6 +1,6 @@
 
 class AltitudeMotor:
-    def __init__(self, rpimotor_object, steps_360, gpiopins=None, inv=False, wait=0.01, gear_ratio=1, steptype="full", rpimotorlib_oddity=False):
+    def __init__(self, rpimotor_object, steps_360, gpiopins=None, inv=False, wait=0.01, gear_ratio=1, steptype="Full", rpimotorlib_oddity=False):
         """
         please provide gear ratio as a float corresponding to
         the amount of times to motor has to turn 360° to fully
@@ -51,7 +51,7 @@ class AltitudeMotor:
 
 
 class AzimuthMotor:
-    def __init__(self, rpimotor_object, steps_360, gpiopins=None, inv=False, wait=0.01, gear_ratio=1, steptype="full", rpimotorlib_discrepancy=False):
+    def __init__(self, rpimotor_object, steps_360, gpiopins=None, inv=False, wait=0.01, gear_ratio=1, steptype="Full", rpimotorlib_discrepancy=False):
         """
         please provide gear ratio as a float corresponding to
         the amount of times to motor has to turn 360° to fully
