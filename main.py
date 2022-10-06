@@ -4,7 +4,7 @@ from datetime import datetime
 import astropy.units as units
 from astropy.time import Time
 import geocoder
-#import pandas as pd
+# import pandas as pd
 from astropy.coordinates import SkyCoord, EarthLocation, AltAz, get_body
 from astropy.coordinates.name_resolve import NameResolveError
 from astropy.coordinates import solar_system_ephemeris
@@ -30,7 +30,8 @@ class TelescopePointer:
         telescope_motor_api.alt_motor.current_position = alt
 
     def set_target(self, query, latlng):
-        """gets current ra, dec, distance, altitude and azimuth for a celestial object specified by the 'celestial_body' parameter,
+        """gets current ra, dec, distance, altitude and azimuth for a celestial object specified by the
+        'celestial_body' parameter,
          sets target. target astrometrics (ra, dec) given in floating point numbers which are degrees"""
         self.query = query
         self.latlng = latlng
@@ -38,11 +39,11 @@ class TelescopePointer:
         # script for returning elevation from lat, long, based on open elevation data
         # which in turn is based on SRTM
 
-        #query = (f'https://api.open-elevation.com/api/v1/lookup'
-        #f'?locations={latlng[0]},{latlng[1]}')
-        #r = requests.get(query).json()  # json object, various ways you can extract value
+        # query = (f'https://api.open-elevation.com/api/v1/lookup'
+        # f'?locations={latlng[0]},{latlng[1]}')
+        # r = requests.get(query).json()  # json object, various ways you can extract value
         # one approach is to use pandas json functionality:
-        #elevation = float(pd.io.json.json_normalize(r, 'results')['elevation'].values[0])
+        # elevation = float(pd.io.json.json_normalize(r, 'results')['elevation'].values[0])
 
         geo_location = EarthLocation(lat=latlng[0] * units.deg, lon=latlng[0] * units.deg, height=5 * units.m)
         try:
@@ -78,8 +79,21 @@ class TelescopePointer:
         # getting az/alt again because time exists
 
         # converting astropy angle to float
-        az = az.dms[0] + (az.dms[2] / az.dms[1])
-        alt = alt.dms[0] + (alt.dms[2] / alt.dms[1])
+        try:
+            az = az.dms[0] + (az.dms[2]/3600 + az.dms[1]/60)
+            alt = alt.dms[0] + (alt.dms[2]/3600 + alt.dms[1]/60)
+        except:
+            pass
+        try:
+            az = az.dms[0] + az.dms[1]/60
+            alt = alt.dms[0] + alt.dms[1]/60
+        except:
+            pass
+        try:
+            az = az.dms[0]
+            alt = alt.dms[0]
+        except:
+            pass
 
         print(f"converted to float: alt:{alt} az:{az}")
 
@@ -116,7 +130,7 @@ telescope_motor_api = TelescopeMotorController(az_motor=AzimuthMotor(
     inv=True
 
 ),
-#2038
+    # 2038
     alt_motor=AltitudeMotor(
         rpimotor_object=RpiMotorLib.BYJMotor(),
         steps_360=512,
@@ -174,7 +188,7 @@ if __name__ == "__main__":
 
         elif choice == 'C':
             telescope_pointer.calibrate(calibration_reference=input("\n calibration reference: "), latlng=latlng)
-            print("calibrated")
+            print("manually calibrated")
 
         elif choice == 'exit':
             break
