@@ -24,8 +24,8 @@ class TelescopePointer:
         self.set_target(query=calibration_reference, latlng=latlng)
         az = telescope_pointer.target.az
         alt = telescope_pointer.target.alt
-        az = az.dms[0] + (az.dms[2] / az.dms[1])
-        alt = alt.dms[0] + (alt.dms[2] / alt.dms[1])
+        az = az.dms[0] + (az.dms[2] / 3600 + az.dms[1] / 60)
+        alt = alt.dms[0] + (alt.dms[2] / 3600 + alt.dms[1] / 60)
         telescope_motor_api.az_motor.current_position = az
         telescope_motor_api.alt_motor.current_position = alt
 
@@ -78,7 +78,7 @@ class TelescopePointer:
         """
         # getting az/alt again because time exists
 
-        # converting astropy angle to float
+        # converting astropy angle to float if necessary
         try:
             az = az.dms[0] + (az.dms[2]/3600 + az.dms[1]/60)
             alt = alt.dms[0] + (alt.dms[2]/3600 + alt.dms[1]/60)
