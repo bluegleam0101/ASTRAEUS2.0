@@ -51,7 +51,7 @@ class AltitudeMotor:
 
 
 class AzimuthMotor:
-    def __init__(self, rpimotor_object, steps_360, gpiopins=None, inv=False, wait=0.01, gear_ratio=1, steptype="Full",
+    def __init__(self, rpimotor_object, steps_360, gpiopins=None, inv=False, wait=0.1, gear_ratio=1, steptype="Full",
                  rpimotorlib_discrepancy=False):
         """
         please provide gear ratio as a float corresponding to
@@ -101,5 +101,3 @@ class TelescopeMotorController:
     def __init__(self, alt_motor, az_motor):
         self.az_motor = az_motor
         self.alt_motor = alt_motor
-
-
