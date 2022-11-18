@@ -51,7 +51,7 @@ class AltitudeMotor:
 
 
 class AzimuthMotor:
-    def __init__(self, rpimotor_object, steps_360, gpiopins=None, inv=False, wait=0.05, gear_ratio=1, steptype="Full",
+    def __init__(self, rpimotor_object, steps_360, gpiopins=None, inv=False, wait=0.05, gear_ratio=1, steptype="Half",
                  rpimotorlib_discrepancy=False):
         """
         please provide gear ratio as a float corresponding to
@@ -91,7 +91,7 @@ class AzimuthMotor:
         if self.oddity:
             self.clockwise = not self.clockwise
 
-        self.rpimotor_object.motor_go(clockwise=self.clockwise, steptype=self.steptype, steps=self.steps,
+        self.rpimotor_object.motor_go(clockwise=self.clockwise, steptype=self.steptype, steps=self.steps*2,
                                       stepdelay=self.wait,
                                       initdelay=0.1)
         self.current_position = target_az
