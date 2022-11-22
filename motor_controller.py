@@ -26,7 +26,7 @@ class AltitudeMotor:
         # finding delta degrees
         a = float(target_alt) - self.current_position
         a = (a + 180) % 360 - 180
-        self.degrees_to_turn = a
+        self.degrees_to_turn = abs(a)
 
         self.steps = abs(int(((self.degrees_to_turn / 360) * self.steps_360) * self.gear_ratio))
         print(f"alt: degrees to turn:{self.degrees_to_turn}")
